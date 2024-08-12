@@ -4,6 +4,8 @@ import { z } from "zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ImSpinner2 } from "react-icons/im"
+import { signIn } from "@/actions/user"
+import { toast } from "sonner"
 
 export const SignInFormSchema = z.object({
 	email: z.string().email(),
@@ -22,8 +24,11 @@ const SignInForm = () => {
 	const onSubmit: SubmitHandler<z.infer<typeof SignInFormSchema>> = async (
 		data
 	) => {
-        if (isSubmitting) return
-		await new Promise((resolve) => setTimeout(resolve, 1000))
+		try {
+			await signIn(data)
+		} catch (error: any) {
+			toast.error(error.message)
+		}
 	}
 
 	return (

@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-    id             String  @id @default(cuid()) @map("_id") @db.ObjectId
+    id             String  @id @default(auto()) @map("_id") @db.ObjectId
     email          String  @unique
     name           String?
     picture        String?
@@ -32,18 +32,15 @@ model User {
 }
 
 model Session {
-    id        String   @id @default(cuid()) @map("_id") @db.ObjectId
+    sessionId String   @id @default(auto()) @map("_id") @db.ObjectId
+    id        String   @unique
     userId    String   @db.ObjectId
     expiresAt DateTime
-
-    user User @relation(fields: [userId], references: [id])
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
 
 model Link {
-    id      String  @id @default(cuid()) @map("_id") @db.ObjectId
+    id      String  @id @default(auto()) @map("_id") @db.ObjectId
     userId  String? @db.ObjectId
     token   String  @unique
     fullUrl String
@@ -56,7 +53,7 @@ model Link {
 }
 
 model Click {
-    id     String @id @default(cuid()) @map("_id") @db.ObjectId
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
     linkId String @db.ObjectId
     userId String @db.ObjectId
 

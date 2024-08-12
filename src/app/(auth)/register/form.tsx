@@ -4,11 +4,13 @@ import { z } from "zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ImSpinner2 } from "react-icons/im"
+import { createUser } from "@/actions/user"
+import { toast } from "sonner"
 
 export const SignUpFormSchema = z
 	.object({
-		email: z.string().email(),
-		name: z.string().min(3, "Name must be at least 3 characters"),
+		email: z.string().email().trim(),
+		name: z.string().min(3, "Name must be at least 3 characters").trim(),
 		password: z.string().min(8, "Password must be at least 8 characters"),
 		confirmPassword: z
 			.string()
@@ -31,8 +33,11 @@ const SignUpForm = () => {
 	const onSubmit: SubmitHandler<z.infer<typeof SignUpFormSchema>> = async (
 		data
 	) => {
-		if (isSubmitting) return
-		await new Promise((resolve) => setTimeout(resolve, 1000))
+		try {
+			await createUser(data)
+		} catch (error: any) {
+			toast.error(error.message)
+		}
 	}
 
 	return (
