@@ -9,7 +9,11 @@ export const metadata: Metadata = {
 		"Sign in to Trimfy to access your account and start shortening links.",
 }
 
-const SignIn = () => {
+const SignIn = ({
+	searchParams,
+}: {
+	searchParams: { [key: string]: string | string[] | undefined }
+}) => {
 	return (
 		<div className="flex min-h-screen bg-gray-900 items-center justify-center text-white">
 			<div className="space-y-4">
@@ -20,7 +24,7 @@ const SignIn = () => {
 
 				<SocialButtons />
 				<Divider text="OR" />
-				<SignInForm />
+				<SignInForm params={searchParams} />
 			</div>
 		</div>
 	)

@@ -1,18 +1,58 @@
 "use client"
 
-import { z } from "zod"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { ImSpinner2 } from "react-icons/im"
 import { signIn } from "@/actions/auth"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { debounce } from "lodash"
+import { useCallback, useEffect } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { ImSpinner2 } from "react-icons/im"
 import { toast } from "sonner"
+import { z } from "zod"
 
 export const SignInFormSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(8, "Password must be at least 8 characters"),
 })
 
-const SignInForm = () => {
+const SignInForm = ({
+	params,
+}: {
+	params: { [key: string]: string | string[] | undefined }
+}) => {
+	const debouncedToast = useCallback(
+		debounce((message: string) => {
+			toast.error(message)
+		}, 300), // Adjust debounce delay as needed
+		[]
+	)
+
+	useEffect(() => {
+		if (params.error) {
+			switch (params.error) {
+				case "github_id_mismatch":
+					debouncedToast(
+						"An account already exists with this email but with a different GitHub account."
+					)
+					break
+				case "google_id_mismatch":
+					debouncedToast(
+						"An account already exists with this email but with a different Google account."
+					)
+					break
+				case "github_auth_error":
+					debouncedToast(
+						"An error occurred while authenticating with GitHub."
+					)
+					break
+				case "google_auth_error":
+					debouncedToast(
+						"An error occurred while authenticating with Google."
+					)
+					break
+			}
+		}
+	}, [params.error])
+
 	const {
 		register,
 		handleSubmit,

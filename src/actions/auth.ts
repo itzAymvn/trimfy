@@ -118,8 +118,6 @@ export const googleSignIn = async () => {
 		options
 	)
 
-	console.log(url.toString())
-
 	cookies().set("google_oauth_state", state, {
 		path: "/",
 		httpOnly: true,
