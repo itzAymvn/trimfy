@@ -1,5 +1,6 @@
 "use client"
 
+import { githubSignIn, googleSignIn } from "@/actions/auth"
 import { useState } from "react"
 import { FaGithub, FaGoogle } from "react-icons/fa"
 import { ImSpinner2 } from "react-icons/im"
@@ -9,18 +10,14 @@ function SocialButtons() {
 
 	const signInWithGoogle = async () => {
 		setLoading((prev) => ({ ...prev, google: true }))
-		setTimeout(() => {
-			console.log("Signing in with Google")
-			setLoading((prev) => ({ ...prev, google: false }))
-		}, 1000)
+		await googleSignIn()
+		setLoading((prev) => ({ ...prev, google: false }))
 	}
 
 	const signInWithGithub = async () => {
 		setLoading((prev) => ({ ...prev, github: true }))
-		setTimeout(() => {
-			console.log("Signing in with Github")
-			setLoading((prev) => ({ ...prev, github: false }))
-		}, 1000)
+		await githubSignIn()
+		setLoading((prev) => ({ ...prev, github: false }))
 	}
 
 	return (

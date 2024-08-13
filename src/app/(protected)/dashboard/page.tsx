@@ -1,4 +1,5 @@
 import { useAuth } from "@/lib/lucia"
+import Image from "next/image"
 import { redirect } from "next/navigation"
 
 const Dashboard = async () => {
@@ -17,7 +18,9 @@ const Dashboard = async () => {
 				</p>
 
 				{user.picture && (
-					<img
+					<Image
+						width={128}
+						height={128}
 						src={user.picture}
 						alt="Profile Picture"
 						className="rounded-full w-32 h-32 mx-auto"

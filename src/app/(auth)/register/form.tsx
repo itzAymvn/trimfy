@@ -4,7 +4,7 @@ import { z } from "zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ImSpinner2 } from "react-icons/im"
-import { createUser } from "@/actions/user"
+import { createUser } from "@/actions/auth"
 import { toast } from "sonner"
 
 export const SignUpFormSchema = z

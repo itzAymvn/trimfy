@@ -1,4 +1,4 @@
-import { signOut } from "@/actions/user"
+import { signOut } from "@/actions/auth"
 import { useAuth } from "@/lib/lucia"
 import Link from "next/link"
 import { FaLink } from "react-icons/fa"

@@ -84,6 +84,7 @@
 		"@hookform/resolvers": "^3.9.0",
 		"@lucia-auth/adapter-prisma": "^4.0.1",
 		"@prisma/client": "5.18.0",
+		"arctic": "^1.9.2",
 		"bcryptjs": "^2.4.3",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",

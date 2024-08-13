@@ -2,8 +2,10 @@
 
 import { SignInFormSchema } from "@/app/(auth)/login/form"
 import { SignUpFormSchema } from "@/app/(auth)/register/form"
+import { github, google } from "@/lib/arctic"
 import { lucia } from "@/lib/lucia"
 import prisma from "@/lib/prisma"
+import { generateCodeVerifier, generateState } from "arctic"
 import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
@@ -87,4 +89,51 @@ export const signOut = async () => {
 	await lucia.invalidateSession(sessionId)
 	cookies().delete(lucia.sessionCookieName)
 	redirect("/")
+}
+export const githubSignIn = async () => {
+	const state = generateState()
+	const url = await github.createAuthorizationURL(state)
+
+	cookies().set("github_oauth_state", state, {
+		path: "/",
+		secure: process.env.NODE_ENV === "production",
+		httpOnly: true,
+		maxAge: 60 * 10,
+		sameSite: "lax",
+	})
+
+	redirect(url.toString())
+}
+
+export const googleSignIn = async () => {
+	const state = generateState()
+	const codeVerifier = generateCodeVerifier()
+	const options = {
+		scopes: ["email", "profile"],
+	}
+
+	const url = await google.createAuthorizationURL(
+		state,
+		codeVerifier,
+		options
+	)
+
+	console.log(url.toString())
+
+	cookies().set("google_oauth_state", state, {
+		path: "/",
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		maxAge: 60 * 10,
+		sameSite: "lax",
+	})
+	cookies().set("google_oauth_code_verifier", codeVerifier, {
+		path: "/",
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		maxAge: 60 * 10,
+		sameSite: "lax",
+	})
+
+	redirect(url.toString())
 }
