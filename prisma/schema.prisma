@@ -53,9 +53,11 @@ model Link {
 }
 
 model Click {
-    id     String @id @default(auto()) @map("_id") @db.ObjectId
-    linkId String @db.ObjectId
-    userId String @db.ObjectId
+    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    linkId    String  @db.ObjectId
+    userId    String  @db.ObjectId
+    userAgent String?
+    ipAddress String?
 
     link      Link     @relation(fields: [linkId], references: [id])
     createdAt DateTime @default(now())
