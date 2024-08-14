@@ -75,6 +75,7 @@
 	},
 	"homepage": "https://trimfy.netlify.app",
 	"scripts": {
+        "postinstall": "prisma generate",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
