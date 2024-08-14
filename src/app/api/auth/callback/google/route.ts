@@ -3,7 +3,6 @@ import { lucia } from "@/lib/lucia"
 import prisma from "@/lib/prisma"
 import { GoogleUser } from "@/types/app"
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url)

@@ -5,6 +5,7 @@ import { FaShield } from "react-icons/fa6"
 import { IoIosSettings } from "react-icons/io"
 import HeroIcon from "./../../public/hero-icon.svg"
 import { Metadata } from "next"
+import LINKS from "@/constants/link"
 
 export const metadata: Metadata = {
 	title: "Trimfy",
@@ -31,7 +32,7 @@ const Homepage = () => {
 								<div className="mt-8">
 									<Link
 										className="text-gray-900 font-semibold bg-gray-200 p-4 mt-4 rounded-md hover:opacity-90"
-										href={"/register"}
+										href={LINKS.REGISTER}
 									>
 										Get Started
 									</Link>

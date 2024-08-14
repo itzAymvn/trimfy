@@ -5,6 +5,8 @@ import SignInForm from "./form"
 import Image from "next/image"
 import { useAuth } from "@/lib/lucia"
 import { redirect } from "next/navigation"
+import Link from "next/link"
+import LINKS from "@/constants/link"
 
 export const metadata: Metadata = {
 	title: "Sign In - Trimfy",
@@ -19,7 +21,7 @@ const SignIn = async ({
 }) => {
 	const { session } = await useAuth()
 	if (session) {
-		redirect("/dashboard")
+		redirect(LINKS.DASHBOARD)
 	}
 
 	return (
@@ -45,6 +47,16 @@ const SignIn = async ({
 					<SocialButtons />
 					<Divider text="OR" />
 					<SignInForm params={searchParams} />
+
+					<p className="text-gray-400">
+						Don't have an account?{" "}
+						<Link
+							href={LINKS.REGISTER}
+							className="text-blue-400 hover:underline"
+						>
+							Sign up
+						</Link>
+					</p>
 				</div>
 			</div>
 		</div>

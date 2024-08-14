@@ -2,6 +2,7 @@
 
 import { SignInFormSchema } from "@/app/(auth)/login/form"
 import { SignUpFormSchema } from "@/app/(auth)/register/form"
+import LINKS from "@/constants/link"
 import { github, google } from "@/lib/arctic"
 import { lucia } from "@/lib/lucia"
 import prisma from "@/lib/prisma"
@@ -48,7 +49,7 @@ export const createUser = async (data: z.infer<typeof SignUpFormSchema>) => {
 		throw new Error(error.message)
 	}
 
-	redirect("/dashboard")
+	redirect(LINKS.DASHBOARD)
 }
 export const signIn = async (data: z.infer<typeof SignInFormSchema>) => {
 	const { email, password } = data
@@ -82,13 +83,13 @@ export const signIn = async (data: z.infer<typeof SignInFormSchema>) => {
 		throw new Error(error.message)
 	}
 
-	redirect("/dashboard")
+	redirect(LINKS.DASHBOARD)
 }
 export const signOut = async () => {
 	const sessionId = cookies().get(lucia.sessionCookieName)?.value!
 	await lucia.invalidateSession(sessionId)
 	cookies().delete(lucia.sessionCookieName)
-	redirect("/")
+	redirect(LINKS.HOME)
 }
 export const githubSignIn = async () => {
 	const state = generateState()
