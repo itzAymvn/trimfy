@@ -3,7 +3,7 @@
 import { signIn } from "@/actions/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { debounce } from "lodash"
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { ImSpinner2 } from "react-icons/im"
 import { toast } from "sonner"
@@ -19,12 +19,9 @@ const SignInForm = ({
 }: {
 	params: { [key: string]: string | string[] | undefined }
 }) => {
-	const debouncedToast = useCallback(
-		debounce((message: string) => {
-			toast.error(message)
-		}, 300), // Adjust debounce delay as needed
-		[]
-	)
+	const debouncedToast = debounce((message: string) => {
+		toast.error(message)
+	}, 300)
 
 	useEffect(() => {
 		if (params.error) {
@@ -51,7 +48,7 @@ const SignInForm = ({
 					break
 			}
 		}
-	}, [params.error])
+	}, [params.error, debouncedToast])
 
 	const {
 		register,

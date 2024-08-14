@@ -1,11 +1,11 @@
 import { signOut } from "@/actions/auth"
 import LINKS from "@/constants/link"
-import { useAuth } from "@/lib/lucia"
+import { Auth } from "@/lib/lucia"
 import Link from "next/link"
 import { FaLink } from "react-icons/fa"
 
 export const Navbar = async () => {
-	const { session } = await useAuth()
+	const { session } = await Auth()
 
 	return (
 		<nav className="bg-gray-900 flex flex-row items-center justify-between">

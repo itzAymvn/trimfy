@@ -3,7 +3,7 @@ import Divider from "@/components/ui/divider"
 import { Metadata } from "next"
 import SignUpForm from "./form"
 import Image from "next/image"
-import { useAuth } from "@/lib/lucia"
+import { Auth } from "@/lib/lucia"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import LINKS from "@/constants/link"
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 const SignUp = async () => {
-	const { session } = await useAuth()
+	const { session } = await Auth()
 	if (session) {
 		redirect(LINKS.DASHBOARD)
 	}

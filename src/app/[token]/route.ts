@@ -1,12 +1,11 @@
-import { NextApiRequest } from "next"
-import prisma from "@/lib/prisma"
-import { NextResponse } from "next/server"
-import { notFound, redirect } from "next/navigation"
 import LINKS from "@/constants/link"
+import prisma from "@/lib/prisma"
 import { headers } from "next/headers"
+import { redirect } from "next/navigation"
+import { NextRequest, NextResponse } from "next/server"
 
 export const GET = async (
-	request: NextApiRequest,
+	request: NextRequest,
 	{ params }: { params: { token: string } }
 ) => {
 	const link = await prisma.link.findUnique({

@@ -3,7 +3,7 @@ import Divider from "@/components/ui/divider"
 import { Metadata } from "next"
 import SignInForm from "./form"
 import Image from "next/image"
-import { useAuth } from "@/lib/lucia"
+import { Auth } from "@/lib/lucia"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import LINKS from "@/constants/link"
@@ -19,7 +19,7 @@ const SignIn = async ({
 }: {
 	searchParams: { [key: string]: string | string[] | undefined }
 }) => {
-	const { session } = await useAuth()
+	const { session } = await Auth()
 	if (session) {
 		redirect(LINKS.DASHBOARD)
 	}
@@ -49,7 +49,7 @@ const SignIn = async ({
 					<SignInForm params={searchParams} />
 
 					<p className="text-gray-400">
-						Don't have an account?{" "}
+						Don&apos;t have an account?{" "}
 						<Link
 							href={LINKS.REGISTER}
 							className="text-blue-400 hover:underline"

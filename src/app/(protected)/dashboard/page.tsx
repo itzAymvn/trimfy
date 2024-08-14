@@ -1,6 +1,6 @@
 import { getUserLinks } from "@/actions/app"
 import LINKS from "@/constants/link"
-import { useAuth } from "@/lib/lucia"
+import { Auth } from "@/lib/lucia"
 import { calculateAge } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
@@ -8,7 +8,7 @@ import { redirect } from "next/navigation"
 import { FiClock, FiPlusCircle } from "react-icons/fi"
 
 const Dashboard = async () => {
-	const { session, user } = await useAuth()
+	const { session, user } = await Auth()
 
 	if (!session) {
 		return redirect(LINKS.LOGIN)
@@ -97,7 +97,8 @@ const Dashboard = async () => {
 								height="200"
 							/>
 							<p className="text-gray-400 text-lg text-center">
-								You don't have any links yet. Get started by{" "}
+								You don&apos;t have any links yet. Get started
+								by{" "}
 								<Link
 									href={LINKS.DASHBOARD_LINK_NEW}
 									className="text-blue-400 hover:underline"
