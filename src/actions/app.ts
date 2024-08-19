@@ -24,3 +24,23 @@ export const getUserLinks = async () => {
 		return links ?? null
 	}
 }
+
+export const getLink = async (token: string) => {
+	const { user } = await Auth()
+
+	if (!user) {
+		redirect(LINKS.LOGIN)
+	} else {
+		const link = await prisma.link.findUnique({
+			where: {
+				token,
+				userId: user.id,
+			},
+			include: {
+				clicks: true,
+			},
+		})
+
+		return link ?? null
+	}
+}
