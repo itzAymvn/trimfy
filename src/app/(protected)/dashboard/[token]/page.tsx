@@ -1,4 +1,5 @@
 import { getLink } from "@/actions/app"
+import ClicksChart from "@/components/ui/clickschart"
 import LINKS from "@/constants/link"
 import { Auth } from "@/lib/lucia"
 import { IClick } from "@/types/app"
@@ -78,6 +79,15 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 								{process.env.NEXT_PUBLIC_URL}/{link.token}
 							</span>
 						</p>
+					</div>
+				)}
+
+				{link.clicks.length > 0 && (
+					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 w-full h-96">
+						<h2 className="text-2xl font-semibold mb-4">
+							Clicks Over Time
+						</h2>
+						<ClicksChart clicks={link.clicks} />
 					</div>
 				)}
 
