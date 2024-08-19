@@ -56,3 +56,22 @@ interface GoogleUser {
 	given_name: string
 	picture: string
 }
+
+export interface ILink {
+	id: string
+	userId: string | null
+	token: string
+	fullUrl: string
+	createdAt: Date
+	updatedAt: Date
+	clicks: IClick[]
+}
+
+export interface IClick {
+	id: string
+	linkId: string
+	userId: string
+	userAgent: string | null
+	ipAddress: string | null
+	createdAt: Date
+}

@@ -1,11 +1,18 @@
 import { getUserLinks } from "@/actions/app"
+import LinksList from "@/components/ui/linkslist"
+import LinksTable from "@/components/ui/linkstable"
 import LINKS from "@/constants/link"
 import { Auth } from "@/lib/lucia"
-import { calculateAge } from "@/lib/utils"
+import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { FiClock, FiPlusCircle } from "react-icons/fi"
+import { FiPlusCircle } from "react-icons/fi"
+
+export const metadata: Metadata = {
+	title: "Dashboard - Trimfy",
+	description: "Manage your links and view statistics.",
+}
 
 const Dashboard = async () => {
 	const { session, user } = await Auth()
@@ -13,7 +20,6 @@ const Dashboard = async () => {
 	if (!session) {
 		return redirect(LINKS.LOGIN)
 	}
-
 	const links = await getUserLinks()
 
 	return (
@@ -24,59 +30,13 @@ const Dashboard = async () => {
 					Welcome back, {user.name}! Here are your links.
 				</p>
 				{links.length > 0 ? (
-					<div className="overflow-x-auto w-full">
-						<table className="min-w-full bg-gray-800 rounded-lg shadow-lg">
-							<thead>
-								<tr className="bg-gray-700 text-gray-400">
-									<th className="py-3 px-6 text-left border-b border-gray-700">
-										Token
-									</th>
-									<th className="py-3 px-6 text-left border-b border-gray-700">
-										Full URL
-									</th>
-									<th className="py-3 px-6 text-left border-b border-gray-700">
-										Clicks
-									</th>
-									<th className="py-3 px-6 text-left border-b border-gray-700">
-										Created
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{links.map((link, index) => (
-									<tr
-										key={link.id}
-										className={`hover:bg-gray-700 ${
-											index % 2 === 0
-												? "bg-gray-800"
-												: "bg-gray-850"
-										}`}
-									>
-										<td className="py-3 px-6 border-b border-gray-700">
-											<Link
-												href={LINKS.DASHBOARD_LINK(
-													link.token
-												)}
-												className="text-lg font-bold text-blue-400 hover:underline"
-											>
-												/{link.token}
-											</Link>
-										</td>
-										<td className="py-3 px-6 text-gray-400 border-b border-gray-700 truncate max-w-xs">
-											{link.fullUrl}
-										</td>
-										<td className="py-3 px-6 text-gray-400 border-b border-gray-700">
-											{link.clicks.length}
-										</td>
-										<td className="py-3 px-6 text-gray-400 border-b border-gray-700">
-											<FiClock className="inline-block mr-1" />
-											{calculateAge(link.createdAt)}
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-
+					<>
+						<div className="overflow-x-auto w-full hidden md:block">
+							<LinksTable links={links} />
+						</div>
+						<div className="block md:hidden w-full">
+							<LinksList links={links} />
+						</div>
 						<div className="flex items-center justify-end w-full mt-8">
 							<Link
 								href={LINKS.DASHBOARD_LINK_NEW}
@@ -86,7 +46,7 @@ const Dashboard = async () => {
 								New Link
 							</Link>
 						</div>
-					</div>
+					</>
 				) : (
 					<div className="flex items-center justify-center w-full h-96 bg-gray-800 rounded-lg">
 						<div className="flex flex-col items-center justify-center space-y-4">
