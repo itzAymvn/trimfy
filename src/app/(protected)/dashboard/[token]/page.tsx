@@ -1,7 +1,10 @@
 import { getLink } from "@/actions/app"
 import ClicksChart from "@/components/ui/clickschart"
+import Map from "@/components/ui/map"
+import QrCode from "@/components/ui/qrcode"
 import LINKS from "@/constants/link"
 import { Auth } from "@/lib/lucia"
+import { ip2location } from "@/lib/utils"
 import { IClick } from "@/types/app"
 import { Metadata } from "next"
 import Link from "next/link"
@@ -12,24 +15,35 @@ export const metadata: Metadata = {
 	description: "View and manage your link statistics.",
 }
 
-const ClickCard = ({ click }: { click: IClick }) => (
-	<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-		<div className="mb-4">
-			<span>User Agent:</span>
-			<p className="text-gray-400 text-sm">{click.userAgent}</p>
+const ClickCard = async ({ click }: { click: IClick }) => {
+	const location = await ip2location(click.ipAddress!)
+
+	return (
+		<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 hover:border-blue-400 transition-colors flex flex-col-reverse md:flex-row gap-6">
+			<div className="flex-1">
+				<div className="mb-4">
+					<span>User Agent:</span>
+					<p className="text-gray-400 text-sm">{click.userAgent}</p>
+				</div>
+				<div className="mb-4">
+					<span>IP Address:</span>
+					<p className="text-gray-400 text-sm">{click.ipAddress}</p>
+				</div>
+				<div className="mb-4">
+					<span>Click Time:</span>
+					<p className="text-gray-400 text-sm">
+						{new Date(click.createdAt).toLocaleString()}
+					</p>
+				</div>
+			</div>
+			{location?.status === "success" && (
+				<div className="flex-shrink-0 w-full md:w-1/2 min-h-[200px]">
+					<Map posix={[location?.lat!, location?.lon!]} />
+				</div>
+			)}
 		</div>
-		<div className="mb-4">
-			<span>IP Address:</span>
-			<p className="text-gray-400 text-sm">{click.ipAddress}</p>
-		</div>
-		<div className="mb-4">
-			<span>Click Time:</span>
-			<p className="text-gray-400 text-sm">
-				{new Date(click.createdAt).toLocaleString()}
-			</p>
-		</div>
-	</div>
-)
+	)
+}
 
 const LinkPage = async ({ params }: { params: { token: string } }) => {
 	const { session } = await Auth()
@@ -48,9 +62,17 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 				<h1 className="text-4xl font-bold mb-4">
 					View and Manage Your Link Statistics
 				</h1>
-				<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 mb-8">
-					<h2 className="text-3xl font-bold mb-2">{`/${link.token}`}</h2>
-					<p className="text-gray-400 text-lg">{link.fullUrl}</p>
+
+				<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 mb-8 flex flex-wrap justify-between items-start">
+					<div className="flex-1 min-w-[200px]">
+						<h2 className="text-3xl font-bold mb-2">{`/${link.token}`}</h2>
+						<p className="text-gray-400 text-lg">{link.fullUrl}</p>
+					</div>
+					<div className="flex-shrink-0 mt-4 sm:mt-0">
+						<QrCode
+							value={`${process.env.NEXT_PUBLIC_URL}/${link.token}`}
+						/>
+					</div>
 				</div>
 
 				{link.clicks.length > 0 ? (
@@ -60,7 +82,7 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 							On this link, there have been {link.clicks.length}{" "}
 							clicks.
 						</p>
-						<ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+						<ul className="flex flex-col gap-4">
 							{link.clicks.map((click) => (
 								<li key={click.id}>
 									<ClickCard click={click} />

@@ -1,3 +1,4 @@
+import { failedResponse, ipResponse, successResponse } from "@/types/ip"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -21,5 +22,23 @@ export function calculateAge(createdAt: Date) {
 		return `${days} day${days > 1 ? "s" : ""} ago`
 	} else {
 		return "Today"
+	}
+}
+
+export const ip2location = async (
+	ip: string
+): Promise<ipResponse | null> => {
+	try {
+		const response = await fetch(`http://ip-api.com/json/${ip}?`)
+
+		if (!response.ok) {
+			const data = await response.json()
+            return data as failedResponse
+		}
+
+		const data = await response.json()
+		return data as successResponse
+	} catch (error) {
+		return null
 	}
 }
