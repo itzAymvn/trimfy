@@ -3,12 +3,14 @@ import prisma from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse, userAgent } from "next/server"
 
 export const GET = async (
 	request: NextRequest,
 	{ params }: { params: { token: string } }
 ) => {
+	const ua = userAgent(request)
+
 	const link = await prisma.link.findUnique({
 		where: {
 			token: params.token,
@@ -17,6 +19,10 @@ export const GET = async (
 
 	if (!link) {
 		return redirect(LINKS.HOME)
+	}
+
+	if (ua.isBot) {
+		return NextResponse.redirect(link.fullUrl)
 	}
 
 	const headersList = headers()
