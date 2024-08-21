@@ -25,7 +25,7 @@ const SignIn = async ({
 	}
 
 	return (
-		<div className="flex min-h-screen bg-gray-900 items-start pt-4 justify-center text-white px-4">
+		<div className="flex min-h-screen items-start pt-4 justify-center text-white px-4">
 			<div className="flex flex-col lg:flex-row items-start justify-between w-full max-w-5xl lg:space-x-8">
 				<Image
 					src="./thought_process.svg"

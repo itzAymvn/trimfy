@@ -17,7 +17,7 @@ const Homepage = () => {
 	return (
 		<div className="flex min-h-[100dvh] flex-col">
 			<main className="flex-1">
-				<section className="bg-gray-900 py-12 sm:py-24 lg:py-32">
+				<section className="py-12 sm:py-24 lg:py-32">
 					<div className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 						<div className="grid gap-8 lg:grid-cols-2">
 							<div className="space-y-4">

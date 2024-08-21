@@ -14,6 +14,30 @@ export const metadata: Metadata = {
 	description: "Manage your links and view statistics.",
 }
 
+const StatsCard = ({
+	title,
+	count,
+}: {
+	title: string
+	count: number
+}): JSX.Element => (
+	<div className="relative bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex-1 min-w-[250px] overflow-hidden">
+		{/* SVG Background Layer */}
+		<div
+			className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-10 pointer-events-none"
+			style={{ backgroundImage: "url('    /bg.svg')" }}
+		></div>
+		{/* Content */}
+		<div className="relative z-10">
+			<p className="text-gray-400 text-2xl mb-2">{title}</p>
+			<div className="flex items-baseline space-x-2">
+				<span className="text-4xl font-semibold">{count}</span>
+				<span className="text-sm text-gray-400">total</span>
+			</div>
+		</div>
+	</div>
+)
+
 const Dashboard = async () => {
 	const { session, user } = await Auth()
 
@@ -23,7 +47,7 @@ const Dashboard = async () => {
 	const links = await getUserLinks()
 
 	return (
-		<div className="flex min-h-screen bg-gray-900 items-start p-8 md:p-16 justify-center text-white">
+		<div className="flex min-h-screenitems-start p-8 md:p-16 justify-center text-white">
 			<div className="flex flex-col items-start justify-start w-full max-w-5xl space-y-8">
 				<h1 className="text-5xl font-bold text-white">Dashboard</h1>
 				<p className="text-gray-400 text-lg">
@@ -31,30 +55,14 @@ const Dashboard = async () => {
 				</p>
 
 				<div className="flex flex-wrap gap-4 w-full">
-					{/* Links Card */}
-					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex-1 min-w-[250px]">
-						<p className="text-gray-400 text-2xl mb-2">Links</p>
-						<div className="flex items-baseline space-x-2">
-							<span className="text-4xl font-semibold">
-								{links.length}
-							</span>
-							<span className="text-sm text-gray-400">total</span>
-						</div>
-					</div>
-
-					{/* Clicks Card */}
-					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 flex-1 min-w-[250px]">
-						<p className="text-gray-400 text-2xl mb-2">Clicks</p>
-						<div className="flex items-baseline space-x-2">
-							<span className="text-4xl font-semibold">
-								{links.reduce(
-									(acc, link) => acc + link.clicks.length,
-									0
-								)}
-							</span>
-							<span className="text-sm text-gray-400">total</span>
-						</div>
-					</div>
+					<StatsCard title="Links" count={links.length} />
+					<StatsCard
+						title="Clicks"
+						count={links.reduce(
+							(acc, link) => acc + link.clicks.length,
+							0
+						)}
+					/>
 				</div>
 
 				<p className="text-gray-400 text-lg">Here are your links.</p>

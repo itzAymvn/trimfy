@@ -11,36 +11,54 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
-	title: "View Link - Trimfy",
-	description: "View and manage your link statistics.",
+	title: "Link Analytics - Trimfy",
+	description: "Detailed view and management of your link's performance.",
 }
 
 const ClickCard = async ({ click }: { click: IClick }) => {
 	const location = await ip2location(click.ipAddress!)
 
 	return (
-		<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 hover:border-blue-400 transition-colors flex flex-col-reverse md:flex-row gap-6">
+		<div className="bg-gray-900 p-4 rounded-lg shadow hover:shadow-lg transition-all flex flex-col md:flex-row gap-6 relative group">
 			<div className="flex-1">
-				<div className="mb-4">
-					<span>User Agent:</span>
+				<div className="mb-3">
+					<span className="text-sm font-semibold text-gray-300">
+						User Agent:
+					</span>
 					<p className="text-gray-400 text-sm">{click.userAgent}</p>
 				</div>
-				<div className="mb-4">
-					<span>IP Address:</span>
+				<div className="mb-3">
+					<span className="text-sm font-semibold text-gray-300">
+						IP Address:
+					</span>
 					<p className="text-gray-400 text-sm">{click.ipAddress}</p>
 				</div>
-				<div className="mb-4">
-					<span>Click Time:</span>
+				{location?.status === "success" && (
+					<div className="mb-3">
+						<span className="text-sm font-semibold text-gray-300">
+							Country / City:
+						</span>
+						<p className="text-gray-400 text-sm">
+							{location.country} / {location.city}
+						</p>
+					</div>
+				)}
+				<div className="mb-3">
+					<span className="text-sm font-semibold text-gray-300">
+						Click Time:
+					</span>
 					<p className="text-gray-400 text-sm">
 						{new Date(click.createdAt).toLocaleString()}
 					</p>
 				</div>
 			</div>
 			{location?.status === "success" && (
-				<div className="flex-shrink-0 w-full md:w-1/2 min-h-[200px]">
+				<div className="w-full md:w-1/3 min-h-[200px] flex items-center justify-center relative">
 					<Map posix={[location?.lat!, location?.lon!]} />
 				</div>
 			)}
+			{/* Colored Section with Hover Effect */}
+			<div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-blue-500 to-blue-400 rounded-l-sm transition-all duration-300 ease-in-out group-hover:w-0"></div>
 		</div>
 	)
 }
@@ -57,70 +75,95 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-900 p-8 md:p-16 text-white">
-			<div className="container mx-auto max-w-5xl space-y-8">
-				<h1 className="text-4xl font-bold mb-4">
-					View and Manage Your Link Statistics
-				</h1>
+		<div className="min-h-screen p-8 text-gray-100 flex justify-center items-center">
+			<div className="max-w-6xl space-y-12 sm:space-y-16 sm:mx-3">
+				{/* Header Section */}
+				<div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+					<h1 className="text-5xl font-extrabold text-blue-400">
+						Link Analytics
+					</h1>
+					<Link
+						href={LINKS.DASHBOARD}
+						className="mt-6 md:mt-0 bg-blue-500 text-white px-6 py-2 rounded-full shadow hover:bg-blue-600 transition"
+					>
+						Back to Dashboard
+					</Link>
+				</div>
 
-				<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 mb-8 flex flex-wrap justify-between items-start">
-					<div className="flex-1 min-w-[200px]">
-						<h2 className="text-3xl font-bold mb-2">{`/${link.token}`}</h2>
-						<p className="text-gray-400 text-lg">{link.fullUrl}</p>
+				{/* Main Link Information */}
+				<div className="p-8 rounded-lg shadow-lg border bg-gray-800 border-gray-800 flex flex-col md:flex-row items-start gap-8">
+					<div className="flex-1 flex-col space-y-4">
+						<h2 className="text-4xl font-bold text-white">{`/${link.token}`}</h2>
+						<p className="text-lg text-gray-400 break-words">
+							{link.fullUrl}
+						</p>
+						<div className="bg-gray-900 p-4 rounded-2xl">
+							<p className="text-sm text-gray-400">
+								Created:{" "}
+								{new Date(link.createdAt).toLocaleString()}
+							</p>
+							<p className="text-sm text-gray-400">
+								Last clicked:{" "}
+								{new Date(
+									link.clicks[
+										link.clicks.length - 1
+									].createdAt
+								).toLocaleString()}
+							</p>
+						</div>
 					</div>
-					<div className="flex-shrink-0 mt-4 sm:mt-0">
+					<div className="w-full md:w-auto">
 						<QrCode
 							value={`${process.env.NEXT_PUBLIC_URL}/${link.token}`}
 						/>
 					</div>
 				</div>
 
+				{/* Clicks Section */}
 				{link.clicks.length > 0 ? (
-					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-						<h2 className="text-2xl font-semibold">Clicks</h2>
-						<p className="text-gray-400 text-lg mb-4">
-							On this link, there have been {link.clicks.length}{" "}
-							clicks.
-						</p>
-						<ul className="flex flex-col gap-4">
-							{link.clicks.map((click) => (
-								<li key={click.id}>
-									<ClickCard click={click} />
-								</li>
-							))}
-						</ul>
-					</div>
+					<>
+						<div className="p-8 rounded-lg bg-gray-800 shadow-lg border border-gray-800">
+							<h2 className="text-3xl font-semibold mb-6">
+								Clicks
+							</h2>
+							<p className="text-lg text-gray-400 mb-8">
+								This link has been clicked{" "}
+								<span className="text-white">
+									{link.clicks.length}
+								</span>{" "}
+								times.
+							</p>
+							<ul className="space-y-6">
+								{link.clicks.map((click) => (
+									<li key={click.id}>
+										<ClickCard click={click} />
+									</li>
+								))}
+							</ul>
+						</div>
+
+						{/* Clicks Chart */}
+						<div className="p-8 rounded-lg shadow-lg bg-gray-800 border border-gray-800">
+							<h2 className="text-3xl font-semibold mb-6">
+								Clicks Over Time
+							</h2>
+							<div className="w-full h-96">
+								<ClicksChart clicks={link.clicks} />
+							</div>
+						</div>
+					</>
 				) : (
-					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-						<h2 className="text-2xl font-semibold mb-4">Clicks</h2>
-						<p className="text-gray-400 text-lg">
-							<span className="block">
-								No clicks yet. Share the link to start tracking.
-							</span>
-							<span className="block text-blue-400 hover:underline">
+					<div className="p-8 rounded-lg shadow-lg border bg-gray-800 border-gray-800 text-center">
+						<h2 className="text-3xl font-semibold mb-4">Clicks</h2>
+						<p className="text-lg text-gray-400">
+							No clicks yet. Share the link to start tracking.
+							<br />
+							<span className="block text-blue-500 hover:underline mt-4">
 								{process.env.NEXT_PUBLIC_URL}/{link.token}
 							</span>
 						</p>
 					</div>
 				)}
-
-				{link.clicks.length > 0 && (
-					<div className="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 w-full h-96">
-						<h2 className="text-2xl font-semibold mb-4">
-							Clicks Over Time
-						</h2>
-						<ClicksChart clicks={link.clicks} />
-					</div>
-				)}
-
-				<div className="flex items-center justify-end w-full mt-8">
-					<Link
-						href={LINKS.DASHBOARD}
-						className="bg-blue-400 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-500 transition-colors"
-					>
-						Back to Dashboard
-					</Link>
-				</div>
 			</div>
 		</div>
 	)

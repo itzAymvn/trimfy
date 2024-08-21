@@ -19,10 +19,18 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${inter.className} flex flex-col min-h-screen`}>
+			<body
+				className={`${inter.className} flex flex-col min-h-screen relative bg-gray-900`}
+			>
+				{/* SVG Background Layer */}
+				<div
+					className="fixed inset-0 bg-no-repeat bg-center bg-cover pointer-events-none opacity-20"
+					style={{ backgroundImage: "url('/bg.svg')" }}
+				></div>
+
 				<Toaster closeButton={true} richColors={true} />
 				<Navbar />
-				<main className="flex-grow">{children}</main>
+				<main className="flex-grow relative">{children}</main>
 				<Footer />
 			</body>
 		</html>
