@@ -1,5 +1,6 @@
 import { getLink } from "@/actions/app"
 import ClicksChart from "@/components/ui/clickschart"
+import CopyButton from "@/components/ui/copybnt"
 import Map from "@/components/ui/map"
 import QrCode from "@/components/ui/qrcode"
 import LINKS from "@/constants/link"
@@ -48,7 +49,7 @@ const ClickCard = async ({ click }: { click: IClick }) => {
 						Click Time:
 					</span>
 					<p className="text-gray-400 text-sm">
-						{new Date(click.createdAt).toLocaleString()}
+						{new Date(click?.createdAt).toLocaleString()}
 					</p>
 				</div>
 			</div>
@@ -93,21 +94,26 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 				{/* Main Link Information */}
 				<div className="p-8 rounded-lg shadow-lg border bg-gray-800 border-gray-800 flex flex-col md:flex-row items-start gap-8">
 					<div className="flex-1 flex-col space-y-4">
-						<h2 className="text-4xl font-bold text-white">{`/${link.token}`}</h2>
+						<h2 className="text-4xl font-bold text-white flex items-center gap-4">
+							<span>{`/${link.token}`}</span>
+							<CopyButton
+								text={`${process.env.NEXT_PUBLIC_URL}/${link.token}`}
+							/>
+						</h2>
 						<p className="text-lg text-gray-400 break-words">
 							{link.fullUrl}
 						</p>
 						<div className="bg-gray-900 p-4 rounded-2xl">
 							<p className="text-sm text-gray-400">
 								Created:{" "}
-								{new Date(link.createdAt).toLocaleString()}
+								{new Date(link?.createdAt).toLocaleString()}
 							</p>
 							<p className="text-sm text-gray-400">
 								Last clicked:{" "}
 								{new Date(
 									link.clicks[
 										link.clicks.length - 1
-									].createdAt
+									]?.createdAt
 								).toLocaleString()}
 							</p>
 						</div>

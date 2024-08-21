@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { Auth } from "@/lib/lucia"
 import { redirect } from "next/navigation"
 import LINKS from "@/constants/link"
+import { revalidatePath } from "next/cache"
 
 export const getUserLinks = async () => {
 	const { user } = await Auth()
@@ -18,6 +19,10 @@ export const getUserLinks = async () => {
 
 			include: {
 				clicks: true,
+			},
+
+			orderBy: {
+				createdAt: "desc",
 			},
 		})
 
@@ -42,5 +47,29 @@ export const getLink = async (token: string) => {
 		})
 
 		return link ?? null
+	}
+}
+
+export const shortenLink = async (fullUrl: string) => {
+	try {
+		const { user } = await Auth()
+
+		if (!user) {
+			redirect(LINKS.LOGIN)
+		} else {
+			const link = await prisma.link.create({
+				data: {
+					token: Math.random().toString(36).substring(7),
+					fullUrl,
+					userId: user.id,
+				},
+			})
+
+			revalidatePath(LINKS.DASHBOARD)
+			return link ?? null
+		}
+	} catch (error) {
+		console.error(error)
+		return null
 	}
 }

@@ -45,6 +45,7 @@ const Homepage = () => {
 									height="400"
 									alt="Hero"
 									className="rounded-lg object-cover"
+									priority
 									style={{
 										aspectRatio: "500/400",
 										objectFit: "cover",

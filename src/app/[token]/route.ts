@@ -1,5 +1,6 @@
 import LINKS from "@/constants/link"
 import prisma from "@/lib/prisma"
+import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
@@ -36,5 +37,6 @@ export const GET = async (
 		},
 	})
 
+	revalidatePath(LINKS.DASHBOARD_LINK(link.token))
 	return NextResponse.redirect(link.fullUrl)
 }
