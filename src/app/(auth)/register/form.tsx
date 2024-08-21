@@ -34,7 +34,10 @@ const SignUpForm = () => {
 		data
 	) => {
 		try {
-			await createUser(data)
+			const res = await createUser(data)
+			if (!res.success) {
+				throw new Error(res.message)
+			}
 		} catch (error: any) {
 			toast.error(error.message)
 		}

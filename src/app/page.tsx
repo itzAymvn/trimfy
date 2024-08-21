@@ -57,7 +57,10 @@ const Homepage = () => {
 				</section>
 				<section className="bg-muted py-12 sm:py-24 lg:py-32">
 					<div className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-						<div className="grid gap-8 lg:grid-cols-3">
+						<h2 className="text-3xl font-bold text-center text-primary sm:text-4xl lg:text-5xl">
+							Features
+						</h2>
+						<div className="grid gap-8 mt-8 lg:grid-cols-3">
 							<div className="space-y-4">
 								<FaLink className="h-8 w-8 text-primary" />
 								<h3 className="text-2xl font-bold">

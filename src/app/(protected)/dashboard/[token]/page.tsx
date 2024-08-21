@@ -85,7 +85,7 @@ const LinkPage = async ({ params }: { params: { token: string } }) => {
 					</h1>
 					<Link
 						href={LINKS.DASHBOARD}
-						className="mt-6 md:mt-0 bg-blue-500 text-white px-6 py-2 rounded-full shadow hover:bg-blue-600 transition"
+						className="mt-6 md:mt-0 bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition"
 					>
 						Back to Dashboard
 					</Link>

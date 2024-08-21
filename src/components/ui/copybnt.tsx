@@ -6,6 +6,7 @@ import { toast } from "sonner"
 function CopyButton({ text }: { text: string }) {
 	return (
 		<button
+			aria-label="Copy to clipboard"
 			onClick={() => {
 				if (!navigator.clipboard) {
 					toast.error("Clipboard is not supported")

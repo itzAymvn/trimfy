@@ -15,9 +15,6 @@ const CreateLinkSchema = z
 	})
 	.refine(
 		(data) => {
-			console.log(
-				data.fullUrl.toLowerCase().startsWith(PUBLIC_URL!.toLowerCase())
-			)
 			return !data.fullUrl
 				.toLowerCase()
 				.startsWith(PUBLIC_URL!.toLowerCase())
@@ -72,7 +69,7 @@ function CreateLinkForm() {
 						placeholder="Enter a URL to shorten"
 					/>
 					<button
-						className="bg-blue-400 text-white px-4 py-2 flex-shrink-0 hover:bg-blue-500 transition-colors"
+						className="bg-blue-600 text-white px-4 py-2 flex-shrink-0 hover:bg-blue-700 transition-colors"
 						type="submit"
 						disabled={isSubmitting}
 					>

@@ -69,7 +69,6 @@ export const shortenLink = async (fullUrl: string) => {
 			return link ?? null
 		}
 	} catch (error) {
-		console.error(error)
 		return null
 	}
 }

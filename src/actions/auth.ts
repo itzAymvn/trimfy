@@ -46,11 +46,15 @@ export const createUser = async (data: z.infer<typeof SignUpFormSchema>) => {
 			sessionCookie.attributes
 		)
 	} catch (error: any) {
-		throw new Error(error.message)
+		return {
+			success: false,
+			message: error.message,
+		}
 	}
 
 	redirect(LINKS.DASHBOARD)
 }
+
 export const signIn = async (data: z.infer<typeof SignInFormSchema>) => {
 	const { email, password } = data
 
@@ -80,7 +84,10 @@ export const signIn = async (data: z.infer<typeof SignInFormSchema>) => {
 			sessionCookie.attributes
 		)
 	} catch (error: any) {
-		throw new Error(error.message)
+		return {
+			success: false,
+			message: error.message,
+		}
 	}
 
 	redirect(LINKS.DASHBOARD)

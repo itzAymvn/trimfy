@@ -62,7 +62,10 @@ const SignInForm = ({
 		data
 	) => {
 		try {
-			await signIn(data)
+			const res = await signIn(data)
+			if (!res.success) {
+				throw new Error(res.message)
+			}
 		} catch (error: any) {
 			toast.error(error.message)
 		}
